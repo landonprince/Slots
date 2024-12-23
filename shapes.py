@@ -1,31 +1,59 @@
+import pygame
 import random
 
 colors = ("red", "green", "blue", "yellow", "purple")
 shapes = ("square", "triangle", "circle", "diamond", "star")
 
-points = [(55, 73), (178, 73), (305, 73), (434, 73),
-          (55, 193), (178, 193), (305, 193), (434, 193),
-          (55, 313), (178, 310), (305, 313), (434, 313),
-          (55, 433), (178, 433), (305, 433), (434, 433)]
+points = [
+    (55, 73), (178, 73), (305, 73), (434, 73),
+    (55, 193), (178, 193), (305, 193), (434, 193),
+    (55, 313), (178, 313), (305, 313), (434, 313),
+    (55, 433), (178, 433), (305, 433), (434, 433)
+]
 
 class Shape:
-    def __init__(self, color):
+    def __init__(self, color, x, y):
         self.color = color
+        self.x = x
+        self.y = y
     
     def draw(self):
         raise NotImplementedError("Subclasses must implement draw method")
     
 class Square(Shape):
-    def __init__(self, color):
-        super().__init__(color)
+    def __init__(self, color, x, y):
+        super().__init__(color, x, y)
+        self.side_length = 95
+    
+    def draw(self, screen):
+        rect = pygame.Rect(self.x, self.y, self.side_length, self.side_length)
+        pygame.draw.rect(screen, self.color, rect)
+        pygame.draw.rect(screen, "black", rect, 5)
+        
+class Circle(Shape):
+    def __init__(self, color, x, y):
+        super().__init__(color, x, y)
+        self.radius = 48
+        
+    def draw(self, screen):
+        pygame.draw.circle(screen, self.color, 
+                           (self.x + self.radius, self.y + self.radius), self.radius)
+        pygame.draw.circle(screen, "black", 
+                           (self.x + self.radius, self.y + self.radius), self.radius, 5)
 
-    def generate(self):
-        random_index = random.randint(0, len(points) - 1)  # Dynamically determine range
-        point = points.pop(random_index)  # Safely remove the point
-        return (point[0], point[1], 95, 95)
+def get_random_shape():
+    shape_type = random.choice(shapes)
+    color = random.choice(colors)
+    return shape_type, color
         
         
     
+        
+        
+        
+        
+        
+        
         
 
 # SQUARE
