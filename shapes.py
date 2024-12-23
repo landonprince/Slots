@@ -67,14 +67,14 @@ class Diamond(Shape):
     def draw(self, screen):
         center_x = self.x + self.size // 2
         center_y = self.y + self.size // 2
-        
+
         diamond_points = [
             (center_x, center_y - 45),  
             (center_x + 45, center_y),         
             (center_x, center_y + 45), 
             (center_x - 45, center_y)          
         ]
-        
+
         pygame.draw.polygon(screen, self.color, diamond_points)
         pygame.draw.polygon(screen, "black", diamond_points, 7)
         

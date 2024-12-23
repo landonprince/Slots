@@ -60,6 +60,10 @@ def draw_background():
     pygame.draw.line(screen, (100, 70, 40), (552, 40), (552, 560), 11)
     pygame.draw.line(screen, "black", (560, 40), (560, 558), 5)
     
+def draw_buttons():
+    button = pygame.Rect(500, 400, 200, 100)
+    pygame.draw.rect(screen, "green", button, 0, 20)
+    
 def fill_board(shape_list):
     for shape in shape_list:
         shape.draw(screen)
@@ -73,31 +77,8 @@ while True:
             exit()
     
     draw_background()
+    draw_buttons()
     fill_board(all_shapes)
-    
-    # pygame.draw.rect(screen, "green", (55, 73, 95, 95))  # Filled
-    # pygame.draw.rect(screen, "black", (55, 73, 95, 95), 5)  # Outline
-
-    # pygame.draw.rect(screen, "GREEN", (305, 73, 95, 95))  # Filled
-    # pygame.draw.rect(screen, "black", (305, 73, 95, 95), 5)  # Outline
-
-    # pygame.draw.rect(screen, "GREEN", (434, 73, 95, 95))  # Filled
-    # pygame.draw.rect(screen, "black", (434, 73, 95, 95), 5)  # Outline
-
-
-
-    # pygame.draw.rect(screen, "red", (178, 73, 95, 95))  # Filled
-    # pygame.draw.rect(screen, "black", (178, 73, 95, 95), 5)  # Outline
-
-    # pygame.draw.rect(screen, "GREEN", (178, 193, 95, 95))  # Filled
-    # pygame.draw.rect(screen, "black", (178, 193, 95, 95), 5)  # Outline
-
-    # pygame.draw.rect(screen, "GREEN", (178, 313, 95, 95))  # Filled
-    # pygame.draw.rect(screen, "black", (178, 313, 95, 95), 5)  # Outline
-
-    # pygame.draw.rect(screen, "GREEN", (178, 433, 95, 95))  # Filled
-    # pygame.draw.rect(screen, "black", (178, 433, 95, 95), 5)  # Outline
-
 
     # print(pygame.mouse.get_pos())
     pygame.display.update()
