@@ -23,11 +23,13 @@ def generate_shapes():
             shape = shapes.Square(color, x, y)
         elif shape_type == "circle":
             shape = shapes.Circle(color, x, y)
-        else:
-            shape = shapes.Square(color, x, y)
-
+        elif shape_type == "triangle":
+            shape = shapes.Triangle(color, x, y)
+        elif shape_type == "diamond":
+            shape = shapes.Diamond(color, x, y)
             
         shape_list.append(shape)
+        
     return shape_list
 
 def draw_background():
@@ -97,7 +99,7 @@ while True:
     # pygame.draw.rect(screen, "black", (178, 433, 95, 95), 5)  # Outline
 
 
-    print(pygame.mouse.get_pos())
+    # print(pygame.mouse.get_pos())
     pygame.display.update()
     clock.tick(60)
 

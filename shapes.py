@@ -1,8 +1,8 @@
 import pygame
 import random
 
-colors = ("red", "green", "blue", "yellow", "purple")
-shapes = ("square", "triangle", "circle", "diamond", "star")
+colors = ("red", "green", "blue", "yellow")
+shapes = ("square", "triangle", "circle", "diamond")
 
 points = [
     (55, 73), (178, 73), (305, 73), (434, 73),
@@ -23,81 +23,62 @@ class Shape:
 class Square(Shape):
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
-        self.side_length = 95
+        self.size = 95
     
     def draw(self, screen):
-        rect = pygame.Rect(self.x, self.y, self.side_length, self.side_length)
+        rect = pygame.Rect(self.x, self.y, self.size, self.size)
         pygame.draw.rect(screen, self.color, rect)
         pygame.draw.rect(screen, "black", rect, 5)
         
 class Circle(Shape):
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
-        self.radius = 48
+        self.size = 48
         
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, 
-                           (self.x + self.radius, self.y + self.radius), self.radius)
+                           (self.x + self.size, self.y + self.size), self.size)
         pygame.draw.circle(screen, "black", 
-                           (self.x + self.radius, self.y + self.radius), self.radius, 5)
+                           (self.x + self.size, self.y + self.size), self.size, 5)
+        
+class Triangle(Shape):
+    def __init__(self, color, x, y):
+        super().__init__(color, x, y)
+        self.size = 95
 
+    def draw(self, screen):
+        center_x = self.x + self.size // 2   
+        center_y = self.y + self.size // 2  
+        
+        triangle_points = [
+            (center_x, center_y - 45),
+            (center_x + 45, center_y + 45),
+            (center_x - 45, center_y + 45)  
+        ]
+        
+        pygame.draw.polygon(screen, self.color, triangle_points)
+        pygame.draw.polygon(screen, "black", triangle_points, 5)
+        
+class Diamond(Shape):
+    def __init__(self, color, x, y):
+        super().__init__(color, x, y)
+        self.size = 95
+
+    def draw(self, screen):
+        center_x = self.x + self.size // 2
+        center_y = self.y + self.size // 2
+        
+        diamond_points = [
+            (center_x, center_y - 45),  
+            (center_x + 45, center_y),         
+            (center_x, center_y + 45), 
+            (center_x - 45, center_y)          
+        ]
+        
+        pygame.draw.polygon(screen, self.color, diamond_points)
+        pygame.draw.polygon(screen, "black", diamond_points, 7)
+        
 def get_random_shape():
     shape_type = random.choice(shapes)
     color = random.choice(colors)
     return shape_type, color
-        
-        
-    
-        
-        
-        
-        
-        
-        
-        
-
-# SQUARE
-# pygame.draw.rect(screen, "GREEN", (177, 60, 95, 95))  # Filled
-# pygame.draw.rect(screen, "black", (177, 60, 95, 95), 5)  # Outline
-
-# CIRCLE
-# pygame.draw.circle(screen, "GREEN", (100, 105), 48)  
-# pygame.draw.circle(screen, "black", (100, 105), 48, 5) 
-
-# TRIANGLE
-# base_x, base_y = 351, 106 
-# triangle_points = [
-#     (base_x, base_y - 45),  # Top
-#     (base_x + 50, base_y + 45),  # Bottom-right
-#     (base_x - 50, base_y + 45)   # Bottom-left
-# ]
-# pygame.draw.polygon(screen, "GREEN", triangle_points)  # Filled
-# pygame.draw.polygon(screen, "BLACK", triangle_points, 5)  # Outline
-
-# DIAMOND
-# base_x, base_y = 480, 230  
-# diamond_points = [
-#     (base_x, base_y - 50),  # Top
-#     (base_x + 50, base_y),  # Right
-#     (base_x, base_y + 50),  # Bottom
-#     (base_x - 50, base_y)   # Left
-# ]
-# pygame.draw.polygon(screen, "GREEN", diamond_points)  # Filled
-# pygame.draw.polygon(screen, "BLACK", diamond_points, 7)  # Outline
-
-# STAR
-# base_x, base_y = 480, 105  
-# star_points = [
-#     (base_x, base_y - 50),    # Top point
-#     (base_x + 15, base_y - 15),  # Top-right inner
-#     (base_x + 50, base_y - 15),  # Right outer
-#     (base_x + 25, base_y + 10),  # Bottom-right inner
-#     (base_x + 40, base_y + 50),  # Bottom-right outer
-#     (base_x, base_y + 25),       # Bottom center
-#     (base_x - 40, base_y + 50),  # Bottom-left outer
-#     (base_x - 25, base_y + 10),  # Bottom-left inner
-#     (base_x - 50, base_y - 15),  # Left outer
-#     (base_x - 15, base_y - 15)   # Top-left inner
-# ]
-# pygame.draw.polygon(screen, "GREEN", star_points)  # Filled
-# pygame.draw.polygon(screen, "BLACK", star_points, 5)  # Outline
