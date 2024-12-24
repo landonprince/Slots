@@ -61,15 +61,21 @@ def draw_background():
     pygame.draw.line(screen, "black", (560, 40), (560, 558), 5)
     
 def draw_buttons():
-    button = pygame.Rect(500, 400, 200, 100)
-    pygame.draw.rect(screen, "green", button, 0, 20)
+    button = pygame.Rect(573, 430, 170, 100)
+    pygame.draw.rect(screen, (214, 207, 180), button, 0, 30)
+    pygame.draw.rect(screen, "black", button, 5, 30)
     
 def fill_board(shape_list):
     for shape in shape_list:
-        shape.draw(screen)
+        shape.draw_shape(screen)
+        
+def print_shapes(shape_list):
+    for shape in shape_list:
+        shape.print_shape()
         
 all_shapes = generate_shapes()
-    
+# print_shapes(all_shapes)
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

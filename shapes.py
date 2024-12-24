@@ -17,36 +17,45 @@ class Shape:
         self.x = x
         self.y = y
     
-    def draw(self):
-        raise NotImplementedError("Subclasses must implement draw method")
+    def draw_shape(self):
+        raise NotImplementedError("Subclasses must implement draw_shape method")
+    
+    def print_shape(self):
+        raise NotImplementedError("Subclasses must implement print_shape method")
     
 class Square(Shape):
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
         self.size = 95
     
-    def draw(self, screen):
+    def draw_shape(self, screen):
         rect = pygame.Rect(self.x, self.y, self.size, self.size)
         pygame.draw.rect(screen, self.color, rect)
         pygame.draw.rect(screen, "black", rect, 5)
         
+    def print_shape(self):
+        print(f"\nSquare, {self.color}, X: {self.x}, Y: {self.y}\n")
+
 class Circle(Shape):
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
         self.size = 48
         
-    def draw(self, screen):
+    def draw_shape(self, screen):
         pygame.draw.circle(screen, self.color, 
                            (self.x + self.size, self.y + self.size), self.size)
         pygame.draw.circle(screen, "black", 
                            (self.x + self.size, self.y + self.size), self.size, 5)
+        
+    def print_shape(self):
+        print(f"\nCircle, {self.color}, X: {self.x}, Y: {self.y}\n")
         
 class Triangle(Shape):
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
         self.size = 95
 
-    def draw(self, screen):
+    def draw_shape(self, screen):
         center_x = self.x + self.size // 2   
         center_y = self.y + self.size // 2  
         
@@ -59,12 +68,15 @@ class Triangle(Shape):
         pygame.draw.polygon(screen, self.color, triangle_points)
         pygame.draw.polygon(screen, "black", triangle_points, 5)
         
+    def print_shape(self):
+        print(f"\nTriangle, {self.color}, X: {self.x}, Y: {self.y}\n")
+        
 class Diamond(Shape):
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
         self.size = 95
 
-    def draw(self, screen):
+    def draw_shape(self, screen):
         center_x = self.x + self.size // 2
         center_y = self.y + self.size // 2
 
@@ -77,6 +89,9 @@ class Diamond(Shape):
 
         pygame.draw.polygon(screen, self.color, diamond_points)
         pygame.draw.polygon(screen, "black", diamond_points, 7)
+        
+    def print_shape(self):
+        print(f"\nDiamond, {self.color}, X: {self.x}, Y: {self.y}\n")
         
 def get_random_shape():
     shape_type = random.choice(shapes)
