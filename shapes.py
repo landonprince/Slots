@@ -1,7 +1,7 @@
 import pygame
 import random
 
-colors = ("red", "green", "blue", "yellow")
+colors = ("brown1", "darkolivegreen3", "cadetblue2", "gold2")
 shapes = ("square", "triangle", "circle", "diamond")
 
 points = [
