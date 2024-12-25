@@ -1,7 +1,7 @@
 import pygame
 import random
 
-colors = ("brown1", "darkolivegreen3", "cadetblue2", "gold2")
+colors = ("brown1", "darkolivegreen3", "cadetblue2", "gold1")
 shapes = ("square", "triangle", "circle", "diamond")
 
 points = [
@@ -27,6 +27,7 @@ class Square(Shape):
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
         self.size = 95
+        self.type = "square"
     
     def draw_shape(self, screen):
         rect = pygame.Rect(self.x, self.y, self.size, self.size)
@@ -34,12 +35,13 @@ class Square(Shape):
         pygame.draw.rect(screen, "black", rect, 5)
         
     def print_shape(self):
-        print(f"\nSquare, {self.color}, X: {self.x}, Y: {self.y}\n")
+        print(f"\{self.type}, {self.color}, X: {self.x}, Y: {self.y}\n")
 
 class Circle(Shape):
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
         self.size = 48
+        self.type = "circle"
         
     def draw_shape(self, screen):
         pygame.draw.circle(screen, self.color, 
@@ -48,12 +50,13 @@ class Circle(Shape):
                            (self.x + self.size, self.y + self.size), self.size, 5)
         
     def print_shape(self):
-        print(f"\nCircle, {self.color}, X: {self.x}, Y: {self.y}\n")
+        print(f"\n{self.type}, {self.color}, X: {self.x}, Y: {self.y}\n")
         
 class Triangle(Shape):
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
         self.size = 95
+        self.type = "triangle"
 
     def draw_shape(self, screen):
         center_x = self.x + self.size // 2   
@@ -69,12 +72,13 @@ class Triangle(Shape):
         pygame.draw.polygon(screen, "black", triangle_points, 5)
         
     def print_shape(self):
-        print(f"\nTriangle, {self.color}, X: {self.x}, Y: {self.y}\n")
+        print(f"\n{self.type}, {self.color}, X: {self.x}, Y: {self.y}\n")
         
 class Diamond(Shape):
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
         self.size = 95
+        self.type = "diamond"
 
     def draw_shape(self, screen):
         center_x = self.x + self.size // 2
@@ -91,7 +95,7 @@ class Diamond(Shape):
         pygame.draw.polygon(screen, "black", diamond_points, 7)
         
     def print_shape(self):
-        print(f"\nDiamond, {self.color}, X: {self.x}, Y: {self.y}\n")
+        print(f"\n{self.type}, {self.color}, X: {self.x}, Y: {self.y}\n")
         
 def get_random_shape():
     shape_type = random.choice(shapes)
