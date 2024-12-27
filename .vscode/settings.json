@@ -5,6 +5,7 @@
         "cadetblue",
         "collidepoint",
         "darkolivegreen",
-        "MOUSEBUTTONDOWN"
+        "MOUSEBUTTONDOWN",
+        "rects"
     ]
 }
