@@ -36,11 +36,14 @@ outer_bg_x, outer_bg_y = 750, 550
 inner_bg_x, inner_bg_y = 720, 520
 
 outer_bg = pygame.Rect((screen.get_width() - outer_bg_x) // 2, 
-                        (screen.get_height() - outer_bg_y) // 2, outer_bg_x, outer_bg_y)
+                       (screen.get_height() - outer_bg_y) // 2, 
+                        outer_bg_x, outer_bg_y)
 inner_bg = pygame.Rect((screen.get_width() - inner_bg_x) // 2, 
-                        (screen.get_height() - inner_bg_y) // 2, inner_bg_x, inner_bg_y)
-side_bg = pygame.Rect(((screen.get_width() - inner_bg_x) // 2) + 510, 
-                        (screen.get_height() - inner_bg_y) // 2, inner_bg_x - 510, inner_bg_y)
+                       (screen.get_height() - inner_bg_y) // 2, 
+                        inner_bg_x, inner_bg_y)
+side_bg = pygame.Rect((screen.get_width() - inner_bg_x) // 2 + 510, 
+                      (screen.get_height() - inner_bg_y) // 2, 
+                       inner_bg_x - 510, inner_bg_y)
 
 def draw_background():
     screen.fill("brown4")
@@ -87,7 +90,7 @@ def print_shapes(shape_list):
     for shape in shape_list:
         shape.print_shape()
         
-def check_row(y_pos, shape_list):
+def check_row_col(y_pos, shape_list):
     row_shapes = [shape for shape in shape_list if shape.y == y_pos]
     row_shapes = sorted(row_shapes, key=lambda shape: shape.x)
     
@@ -105,23 +108,62 @@ def check_row(y_pos, shape_list):
     
     if len(cur_adjacent_shapes) > len(max_adjacent_shapes):
         max_adjacent_shapes = cur_adjacent_shapes
-        
+    if len(max_adjacent_shapes) == 1:
+        return []
     return max_adjacent_shapes
+
+def draw_line(matching_shapes):
+    length = len(matching_shapes)
+    if length != 0:
+        pygame.draw.line(
+            screen,
+            "black",
+            (matching_shapes[0].x + 95 // 2, 
+             matching_shapes[0].y + 95 // 2),
+            (matching_shapes[length - 1].x + 95 // 2, 
+             matching_shapes[length - 1].y + 95 // 2),
+            10
+        )
+        pygame.draw.line(
+            screen,
+            "white",
+            (matching_shapes[0].x + 95 // 2, 
+             matching_shapes[0].y + 95 // 2),
+            (matching_shapes[length - 1].x + 95 // 2, 
+             matching_shapes[length - 1].y + 95 // 2),
+            3
+        )
+        
     
+def check_board(shape_list):
+    first_row_matches = check_row_col(73, shape_list)
+    draw_line(first_row_matches)
+    
+    second_row_matches = check_row_col(193, shape_list)
+    draw_line(second_row_matches)
+    
+    third_row_matches = check_row_col(313, shape_list)
+    draw_line(third_row_matches)
+    
+    fourth_row_matches = check_row_col(433, shape_list)
+    draw_line(fourth_row_matches)
+
+
+
     
         
         
         
 all_shapes = generate_shapes()
 
-first_row_adjacent_shapes = check_row(73, all_shapes)
-print_shapes(first_row_adjacent_shapes)
 
 while True:
     draw_background()
     fill_board(all_shapes)
+    check_board(all_shapes)
     draw_buttons()
     
+
     mouse_pos = pygame.mouse.get_pos()
     
     if spin_button.collidepoint(mouse_pos):
