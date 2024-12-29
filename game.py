@@ -2,6 +2,7 @@ import pygame
 from sys import exit
 import random
 import shapes
+import graph
 
 # pygame initialization
 pygame.init()
@@ -36,8 +37,6 @@ def generate_shapes():
         shape_list.append(shape)
         
     return shape_list
-
-all_shapes = generate_shapes() # initialize list of random shapes
 
 # dimensions of the outer background & inner background
 outer_bg_x, outer_bg_y = 750, 550
@@ -149,44 +148,68 @@ def check_row_col(pos, type, shape_list):
     
     return max_matching_shapes
 
-def draw_line(matching_shapes):
-    length = len(matching_shapes)
-    if length != 0:
-        pygame.draw.line(
-            screen,
-            "black",
-            (matching_shapes[0].x + 95 // 2, 
-             matching_shapes[0].y + 95 // 2),
-            (matching_shapes[length - 1].x + 95 // 2, 
-             matching_shapes[length - 1].y + 95 // 2),
-            5
-        )
+# return a list of dictionaries containing information about each line
+def generate_lines(shape_list):
+    lines = [] # stores a dictionary of information for each line
     
-def check_board(shape_list):
-    first_row_matches = check_row_col(73, "row", shape_list)
-    draw_line(first_row_matches)
-    second_row_matches = check_row_col(193, "row", shape_list)
-    draw_line(second_row_matches)
-    third_row_matches = check_row_col(313, "row", shape_list)
-    draw_line(third_row_matches)
-    fourth_row_matches = check_row_col(433, "row", shape_list)
-    draw_line(fourth_row_matches)
+    # add horizontal line information to lines list 
+    row_positions = [73, 193, 313, 433]
+    for row_pos in row_positions:
+        matching_shapes = check_row_col(row_pos, "row", shape_list)
+        if matching_shapes:
+            # append dictionary containing line info to lines list
+            lines.append({
+                "shapes": matching_shapes,
+                "color": "black", 
+                "coords": (
+                    # start x,y
+                    matching_shapes[0].x + 95 // 2, 
+                    matching_shapes[0].y + 95 // 2,
+                    # end x,y
+                    matching_shapes[-1].x + 95 // 2, 
+                    matching_shapes[-1].y + 95 // 2
+                )
+            })
     
-    first_col_matches = check_row_col(55, "col", shape_list)
-    draw_line(first_col_matches)
-    second_col_matches = check_row_col(178, "col", shape_list)
-    draw_line(second_col_matches)
-    third_col_matches = check_row_col(305, "col", shape_list)
-    draw_line(third_col_matches)
-    fourth_col_matches = check_row_col(434, "col", shape_list)
-    draw_line(fourth_col_matches)
+    # add vertical line information to lines list
+    col_positions = [55, 178, 305, 434]
+    for col_pos in col_positions:
+        matching_shapes = check_row_col(col_pos, "col", shape_list)
+        if matching_shapes:
+            # append dictionary containing line info to lines list
+            lines.append({
+                "shapes": matching_shapes,
+                "color": "black", 
+                "coords": (
+                    # start x,y
+                    matching_shapes[0].x + 95 // 2, 
+                    matching_shapes[0].y + 95 // 2,
+                    # end x,y
+                    matching_shapes[-1].x + 95 // 2, 
+                    matching_shapes[-1].y + 95 // 2
+                )
+            })
+    
+    return lines
+
+# draw all lines connecting matching shapes
+def draw_lines(lines):
+    for line_info in lines:
+        x1, y1, x2, y2 = line_info["coords"]
+        color = line_info["color"]
+        pygame.draw.line(screen, color, (x1, y1), (x2, y2), 5)
+    
+# initialize the shapes and lines for the current game
+all_shapes = generate_shapes() 
+all_lines = generate_lines(all_shapes)
+graph.color_largest_component(all_lines)
 
 while True:
     # draw the game every frame
     draw_background() 
     draw_buttons()
     fill_board(all_shapes)
-    check_board(all_shapes)
+    draw_lines(all_lines)
     
     mouse_pos = pygame.mouse.get_pos() # get mouse position every frame
     
@@ -211,6 +234,8 @@ while True:
             # if the user clicks the "spin" button, regenerate random shapes
             if event.button == 1 and spin_button.collidepoint(mouse_pos):
                 all_shapes = generate_shapes()
+                all_lines = generate_lines(all_shapes)
+                graph.color_largest_component(all_lines)
             # if the user clicks the "x" button, quit the game
             if event.button == 1 and x_button.collidepoint(mouse_pos):
                 pygame.quit()
