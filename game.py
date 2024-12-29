@@ -10,34 +10,6 @@ screen = pygame.display.set_mode((800,600))
 pygame.display.set_caption("Slots")
 clock = pygame.time.Clock() 
 
-# return a list of 16 shapes of random type and color
-def generate_shapes():
-    points_copy = shapes.points[:] # create copy since we will be popping points
-    shape_list = []
-    
-    # place random shapes at random points in the 4x4 grid
-    while points_copy:
-        index = random.randint(0, len(points_copy) - 1)
-        x, y = points_copy.pop(index)
-        
-        shape_type, color = shapes.get_random_shape()
-        
-        # make specific shape object based on type and add to shape list
-        if shape_type == "square":
-            shape = shapes.Square(color, x, y)
-        elif shape_type == "circle":
-            shape = shapes.Circle(color, x, y)
-        elif shape_type == "triangle":
-            shape = shapes.Triangle(color, x, y)
-        elif shape_type == "diamond":
-            shape = shapes.Diamond(color, x, y)
-        else:
-            raise ValueError(f"Invalid shape type: {shape_type}")
-            
-        shape_list.append(shape)
-        
-    return shape_list
-
 # dimensions of the outer background & inner background
 outer_bg_x, outer_bg_y = 750, 550
 inner_bg_x, inner_bg_y = 720, 520
@@ -102,6 +74,36 @@ def draw_buttons():
     pygame.draw.rect(screen, "black", x_button, 5, 50)
     screen.blit(x_text, (717, 58))
 
+# return a list of 16 shapes of random type & color
+def generate_shapes():
+    points_copy = shapes.points[:] # create copy since we will be popping points
+    shape_list = []
+    
+    # place random shapes at random points in the 4x4 grid
+    while points_copy:
+        index = random.randint(0, len(points_copy) - 1)
+        x, y = points_copy.pop(index)
+        
+        shape_type, color = shapes.get_random_shape()
+        
+        # make specific shape object based on type & add to shape list
+        if shape_type == "square":
+            shape = shapes.Square(color, x, y)
+        elif shape_type == "circle":
+            shape = shapes.Circle(color, x, y)
+        elif shape_type == "triangle":
+            shape = shapes.Triangle(color, x, y)
+        elif shape_type == "diamond":
+            shape = shapes.Diamond(color, x, y)
+        else:
+            raise ValueError(f"Invalid shape type: {shape_type}")
+            
+        shape_list.append(shape)
+        
+    return shape_list
+
+all_shapes = generate_shapes() # initialize all random shapes
+
 # draw all shapes on the grid polymorphically
 def fill_board(shape_list):
     for shape in shape_list:
@@ -113,7 +115,7 @@ def print_shapes(shape_list):
         shape.print_shape()
 
 # return list of adjacent shapes in row/col that have same type or color
-def check_row_col(pos, type, shape_list):
+def get_matching_shapes(pos, type, shape_list):
     # if we want to check a row, grab all 4 shapes in a specific row 
     if type == "row":
         row_col_shapes = [shape for shape in shape_list if shape.y == pos]
@@ -132,7 +134,7 @@ def check_row_col(pos, type, shape_list):
         if (row_col_shapes[i].type == row_col_shapes[i + 1].type) or \
            (row_col_shapes[i].color == row_col_shapes[i + 1].color):
             cur_matching_shapes.append(row_col_shapes[i + 1])
-        # if they do not match, update max and increment cur matches list
+        # if they do not match, update max & increment cur matches list
         else:
             if len(cur_matching_shapes) > len(max_matching_shapes):
                 max_matching_shapes = cur_matching_shapes
@@ -155,7 +157,7 @@ def generate_lines(shape_list):
     # add horizontal line information to lines list 
     row_positions = [73, 193, 313, 433]
     for row_pos in row_positions:
-        matching_shapes = check_row_col(row_pos, "row", shape_list)
+        matching_shapes = get_matching_shapes(row_pos, "row", shape_list)
         if matching_shapes:
             # append dictionary containing line info to lines list
             lines.append({
@@ -174,7 +176,7 @@ def generate_lines(shape_list):
     # add vertical line information to lines list
     col_positions = [55, 178, 305, 434]
     for col_pos in col_positions:
-        matching_shapes = check_row_col(col_pos, "col", shape_list)
+        matching_shapes = get_matching_shapes(col_pos, "col", shape_list)
         if matching_shapes:
             # append dictionary containing line info to lines list
             lines.append({
@@ -192,6 +194,10 @@ def generate_lines(shape_list):
     
     return lines
 
+# initialize all lines & recolor the largest connected component
+all_lines = generate_lines(all_shapes)
+graph.color_largest_component(all_lines)
+
 # draw all lines connecting matching shapes
 def draw_lines(lines):
     for line_info in lines:
@@ -199,13 +205,8 @@ def draw_lines(lines):
         color = line_info["color"]
         pygame.draw.line(screen, color, (x1, y1), (x2, y2), 5)
     
-# initialize the shapes and lines for the current game
-all_shapes = generate_shapes() 
-all_lines = generate_lines(all_shapes)
-graph.color_largest_component(all_lines)
-
 while True:
-    # draw the game every frame
+    # generate game structure & state
     draw_background() 
     draw_buttons()
     fill_board(all_shapes)

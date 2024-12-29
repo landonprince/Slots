@@ -13,7 +13,7 @@ points = [
     (55, 433), (178, 433), (305, 433), (434, 433)
 ]
 
-# return a random shape type and color
+# return a random shape type & color
 def get_random_shape():
     shape_type = random.choice(shapes)
     color = random.choice(colors)
@@ -37,7 +37,7 @@ class Shape:
 
 # subclass for square shape 
 class Square(Shape):
-    # set the color, position, size, and type of the square
+    # set the color, position, size, & type of the square
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
         self.size = 95
@@ -55,7 +55,7 @@ class Square(Shape):
 
 # subclass for the circle shape
 class Circle(Shape):
-    # set the color, position, size, and type of the circle
+    # set the color, position, size, & type of the circle
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
         self.size = 48
@@ -74,7 +74,7 @@ class Circle(Shape):
 
 # subclass for the triangle shape
 class Triangle(Shape):
-    # set the color, position, size, and type of the triangle
+    # set the color, position, size, & type of the triangle
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
         self.size = 95
@@ -100,7 +100,7 @@ class Triangle(Shape):
 
 # subclass for the diamond shape
 class Diamond(Shape):
-    # set the color, position, size, and type of the diamond
+    # set the color, position, size, & type of the diamond
     def __init__(self, color, x, y):
         super().__init__(color, x, y)
         self.size = 95
