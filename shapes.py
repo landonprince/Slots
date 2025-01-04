@@ -2,7 +2,12 @@ import pygame
 import random
 
 # a random color & shape is chosen from these tuples when creating a shape
-colors = ("brown1", "darkolivegreen3", "cadetblue2", "gold1")
+bronze = (169, 113, 66)
+silver = (192, 192, 192)
+gold = (218,165,32)
+diamond = (113, 216, 239)
+
+colors = [bronze, silver, gold, diamond]
 shapes = ("square", "triangle", "circle", "diamond")
 
 # each point represents a position to place a shape (top-left)
@@ -112,10 +117,10 @@ class Diamond(Shape):
         center_y = self.y + self.size // 2
 
         diamond_points = [
-            (center_x, center_y - 45),  
-            (center_x + 45, center_y),         
-            (center_x, center_y + 45), 
-            (center_x - 45, center_y)          
+            (center_x, center_y - 50),  
+            (center_x + 50, center_y),         
+            (center_x, center_y + 50), 
+            (center_x - 50, center_y)          
         ]
 
         pygame.draw.polygon(screen, self.color, diamond_points)

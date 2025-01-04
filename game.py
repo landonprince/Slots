@@ -41,7 +41,7 @@ def draw_background():
     pygame.draw.rect(screen, "black", inner_bg, 5, 10)
     
     # draw vertical grid lines
-    pygame.draw.line(screen, "black", (162, 40), (162, 558), 5)
+    pygame.draw.line(screen, "black", (163, 40), (163, 558), 5)
     pygame.draw.line(screen, "black", (288, 40), (288, 558), 5)
     pygame.draw.line(screen, "black", (416, 40), (416, 558), 5)
     pygame.draw.line(screen, "black", (544, 40), (544, 558), 5)
@@ -53,11 +53,11 @@ def draw_background():
 # initialize rect, color, & text for "spin" button
 spin_button = pygame.Rect(574, 458, 170, 85)
 spin_button_color = (214, 207, 180)
-spin_font = pygame.font.Font(None, 75)
-spin_text = spin_font.render("SPIN", False, "black") 
+spin_font = pygame.font.Font(None, 70)
+spin_text = spin_font.render("Reroll", False, "black") 
 
 # initialize rect, color, & text for "x" button
-x_button = pygame.Rect(705, 54, 40, 40)
+x_button = pygame.Rect(745, 15, 40, 40)
 x_button_color = (220, 20, 60)
 x_font = pygame.font.Font(None, 45)
 x_text = x_font.render("x", False, "black")
@@ -72,7 +72,14 @@ def draw_buttons():
     # draw x button (red)
     pygame.draw.rect(screen, x_button_color, x_button, 0, 50)
     pygame.draw.rect(screen, "black", x_button, 5, 50)
-    screen.blit(x_text, (717, 58))
+    screen.blit(x_text, (757, 19))
+    
+score_bg_color = (214, 207, 180)
+score = pygame.Rect(574, 200, 170, 247)
+
+def draw_scoreboard():
+    pygame.draw.rect(screen, score_bg_color, score, 0, 30)
+    pygame.draw.rect(screen, "black", score, 5, 30)
 
 # return a list of 16 shapes of random type & color
 def generate_shapes():
@@ -208,6 +215,7 @@ def draw_lines(lines):
 while True:
     # generate game structure & state
     draw_background() 
+    draw_scoreboard()
     draw_buttons()
     fill_board(all_shapes)
     draw_lines(all_lines)

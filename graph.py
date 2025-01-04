@@ -74,7 +74,7 @@ def get_largest_component(lines, components):
     if max_component_index is not None:
         return components[max_component_index]
     else:
-        return None # empty of no components
+        return None # empty if no components
 
 def color_largest_component(lines):
     # get the component with the largest number of shapes
@@ -85,8 +85,9 @@ def color_largest_component(lines):
     # color the lines accordingly 
     for i, line_info in enumerate(lines):
         if i in largest_component:
-            line_info["color"] = "red"
+            line_info["color"] = "black"
         else:
             line_info["color"] = "black"
+
 
     
