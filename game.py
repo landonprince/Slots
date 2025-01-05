@@ -7,7 +7,7 @@ import graph
 # pygame initialization
 pygame.init()
 screen = pygame.display.set_mode((800,600))
-pygame.display.set_caption("Slots")
+pygame.display.set_caption("Reroll")
 clock = pygame.time.Clock() 
 
 # dimensions of the outer background & inner background
@@ -27,7 +27,7 @@ side_bg = pygame.Rect((screen.get_width() - inner_bg_x) // 2 + 510,
 
 # draw the game background
 def draw_background():
-    screen.fill("brown4") # fill the entire screen (red-brown)
+    screen.fill((128, 0, 38)) # fill the entire screen (red-brown)
     
     # draw outer background (dark-brown)
     pygame.draw.rect(screen, (100, 70, 40), outer_bg, 20, 15)
@@ -51,9 +51,9 @@ def draw_background():
     pygame.draw.line(screen, "black", (560, 40), (560, 558), 5)
 
 # initialize rect, color, & text for "spin" button
-spin_button = pygame.Rect(574, 458, 170, 85)
+spin_button = pygame.Rect(574, 475, 170, 70)
 spin_button_color = (214, 207, 180)
-spin_font = pygame.font.Font(None, 70)
+spin_font = pygame.font.Font(None, 65)
 spin_text = spin_font.render("Reroll", False, "black") 
 
 # initialize rect, color, & text for "x" button
@@ -67,19 +67,19 @@ def draw_buttons():
     # draw spin button (light-tan)
     pygame.draw.rect(screen, spin_button_color, spin_button, 0, 30)
     pygame.draw.rect(screen, "black", spin_button, 5, 30)
-    screen.blit(spin_text, (598, 479))
+    screen.blit(spin_text, (595, 490))
     
     # draw x button (red)
     pygame.draw.rect(screen, x_button_color, x_button, 0, 50)
     pygame.draw.rect(screen, "black", x_button, 5, 50)
     screen.blit(x_text, (757, 19))
-    
-score_bg_color = (214, 207, 180)
-score = pygame.Rect(574, 200, 170, 247)
+
+scoreboard = pygame.Rect(574, 55, 170, 410)
+scoreboard_color = (214, 207, 180)
 
 def draw_scoreboard():
-    pygame.draw.rect(screen, score_bg_color, score, 0, 30)
-    pygame.draw.rect(screen, "black", score, 5, 30)
+    pygame.draw.rect(screen, scoreboard_color, scoreboard, 0, 15)
+    pygame.draw.rect(screen, "black", scoreboard, 5, 15)
 
 # return a list of 16 shapes of random type & color
 def generate_shapes():
@@ -138,8 +138,7 @@ def get_matching_shapes(pos, type, shape_list):
     # iterate through the 4 shapes in the row or col 
     for i in range(len(row_col_shapes) - 1):
         # if the cur shape matches the next, add it to the cur matches list
-        if (row_col_shapes[i].type == row_col_shapes[i + 1].type) or \
-           (row_col_shapes[i].color == row_col_shapes[i + 1].color):
+        if (row_col_shapes[i].type == row_col_shapes[i + 1].type):
             cur_matching_shapes.append(row_col_shapes[i + 1])
         # if they do not match, update max & increment cur matches list
         else:
@@ -198,13 +197,85 @@ def generate_lines(shape_list):
                     matching_shapes[-1].y + 95 // 2
                 )
             })
-    
+            
     return lines
 
-# initialize all lines & recolor the largest connected component
+# initialize all lines & the shapes in each component
 all_lines = generate_lines(all_shapes)
-graph.color_largest_component(all_lines)
+component_shapes = graph.get_component_shapes(all_lines)
 
+    
+log_font = pygame.font.Font(None, 23)
+final_score_font = pygame.font.Font(None, 40)
+
+def render_log(component_shapes):
+    # Define the points associated with each RGB color tuple
+    color_points = {
+        (185, 117, 60): 1,  # Bronze
+        (180, 180, 180): 3,  # Silver
+        (212, 168, 55): 5,   # Gold
+        (80, 160, 85): 10  # Diamond
+    }
+
+    # Define a reverse mapping from RGB to color names
+    color_names = {
+        (185, 117, 60): "Bronze",
+        (180, 180, 180): "Silver",
+        (212, 168, 55): "Gold",
+        (80, 160, 85): "Diamond"
+    }
+
+    x_offset, y_offset = 587, 67  # Initial position for the log
+    all_totals = []  # To store final totals for each line
+
+    for idx, (component_number, shapes) in enumerate(component_shapes.items()):
+        component_total = 0
+        shape_count = len(shapes)  # Number of shapes in the component
+
+        # Render each shape in the component
+        for shape in shapes:
+            points = color_points.get(shape.color, 0)
+            color_name = color_names.get(shape.color, "unknown")
+            component_total += points
+
+            # Render the log for the shape
+            text_surface = log_font.render(f"{component_number}. {color_name} +{points}", True, (0, 0, 0))
+            screen.blit(text_surface, (x_offset, y_offset))
+            y_offset += 14  # Move down for the next log string
+
+        # Calculate the total for the component
+        final_total = component_total * shape_count
+        all_totals.append(final_total)
+
+        # Draw a horizontal divider line, except for the last component
+
+        y_offset += 3
+        pygame.draw.line(screen, "black", (x_offset, y_offset), (729, y_offset), 2)
+        y_offset += 5  # Add spacing below the line
+            
+        # Render the total points for the component
+        total_surface = log_font.render(
+            f"Line {component_number}: {component_total} x {shape_count} = {final_total}",
+            True,
+            (0, 0, 0),
+        )
+        screen.blit(total_surface, (x_offset, y_offset))
+        y_offset += 17  # Add spacing below the total points
+
+        # Draw a horizontal divider line, except for the last component
+        pygame.draw.line(screen, "black", (x_offset, y_offset), (729, y_offset), 2)
+        y_offset += 5  # Add spacing below the line
+
+
+    # Calculate and display the grand total
+    grand_total = sum(all_totals)
+    final_total_surface = final_score_font.render(
+        f"Score: {grand_total}",
+        True,
+        (0, 0, 0),
+    )
+    screen.blit(final_total_surface, (x_offset, y_offset))
+    
 # draw all lines connecting matching shapes
 def draw_lines(lines):
     for line_info in lines:
@@ -219,6 +290,7 @@ while True:
     draw_buttons()
     fill_board(all_shapes)
     draw_lines(all_lines)
+    render_log(component_shapes)
     
     mouse_pos = pygame.mouse.get_pos() # get mouse position every frame
     
@@ -244,7 +316,7 @@ while True:
             if event.button == 1 and spin_button.collidepoint(mouse_pos):
                 all_shapes = generate_shapes()
                 all_lines = generate_lines(all_shapes)
-                graph.color_largest_component(all_lines)
+                component_shapes = graph.get_component_shapes(all_lines)
             # if the user clicks the "x" button, quit the game
             if event.button == 1 and x_button.collidepoint(mouse_pos):
                 pygame.quit()

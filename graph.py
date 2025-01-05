@@ -45,7 +45,11 @@ def find_connected_components(adjacency):
     return components
 
 # return dictionary containing the shapes in each connected component
-def get_component_shapes(lines, components):
+def get_component_shapes(lines):
+    # get the all line components
+    adjacency = build_graph(lines) 
+    components = find_connected_components(adjacency)
+    
     component_shape_sets = {}
     
     for i, component in enumerate(components):
@@ -56,38 +60,6 @@ def get_component_shapes(lines, components):
         component_shape_sets[i] = component_shapes
         
     return component_shape_sets
-
-# return the component (set of line line indices) with the max size
-def get_largest_component(lines, components):
-    # build dictionary of shapes in each component
-    component_shape_sets = get_component_shapes(lines, components)
-    
-    # find component with max number of shapes
-    max_component_index = None
-    max_num_shapes = -1
-    for index, shape_set in component_shape_sets.items():
-        if len(shape_set) > max_num_shapes:
-            max_num_shapes = len(shape_set)
-            max_component_index = index
-    
-    # return the largest component's set of line indices
-    if max_component_index is not None:
-        return components[max_component_index]
-    else:
-        return None # empty if no components
-
-def color_largest_component(lines):
-    # get the component with the largest number of shapes
-    adjacency = build_graph(lines) 
-    components = find_connected_components(adjacency)
-    largest_component = get_largest_component(lines, components) 
-    
-    # color the lines accordingly 
-    for i, line_info in enumerate(lines):
-        if i in largest_component:
-            line_info["color"] = "black"
-        else:
-            line_info["color"] = "black"
 
 
     

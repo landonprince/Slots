@@ -2,12 +2,13 @@ import pygame
 import random
 
 # a random color & shape is chosen from these tuples when creating a shape
-bronze = (169, 113, 66)
-silver = (192, 192, 192)
-gold = (218,165,32)
-diamond = (113, 216, 239)
+bronze = (185, 117, 60)
+silver = (180, 180, 180)
+gold = (212, 168, 55)
+diamond = (80, 160, 85)
 
-colors = [bronze, silver, gold, diamond]
+colors = (bronze, silver, gold, diamond)
+weights = [50, 30, 15, 5]
 shapes = ("square", "triangle", "circle", "diamond")
 
 # each point represents a position to place a shape (top-left)
@@ -21,7 +22,7 @@ points = [
 # return a random shape type & color
 def get_random_shape():
     shape_type = random.choice(shapes)
-    color = random.choice(colors)
+    color = random.choices(colors, weights=weights, k=1)[0]
     return shape_type, color
 
 # superclass to square, circle, triangle, & diamond subclasses
