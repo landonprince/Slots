@@ -1,5 +1,5 @@
-import pygame
 from sys import exit
+import pygame
 import random
 import shapes
 import graph
@@ -27,17 +27,17 @@ side_bg = pygame.Rect((screen.get_width() - inner_bg_x) // 2 + 510,
 
 # draw the game background
 def draw_background():
-    screen.fill((128, 0, 38)) # fill the entire screen (red-brown)
+    screen.fill((150, 20, 50)) # fill the entire screen (red-brown)
     
     # draw outer background (dark-brown)
-    pygame.draw.rect(screen, (100, 70, 40), outer_bg, 20, 15)
+    pygame.draw.rect(screen, (110, 80, 50), outer_bg, 20, 15)
     pygame.draw.rect(screen, "black", outer_bg, 5, 15)
 
     # draw inner background (gray-brown)
-    pygame.draw.rect(screen, "bisque4", inner_bg, 0, 10) 
+    pygame.draw.rect(screen, (145, 130, 115), inner_bg, 0, 10) 
     
     # draw side background (light-brown)
-    pygame.draw.rect(screen, "burlywood4", side_bg, 0, 10)
+    pygame.draw.rect(screen, (150, 125, 95), side_bg, 0, 10)
     pygame.draw.rect(screen, "black", inner_bg, 5, 10)
     
     # draw vertical grid lines
@@ -47,7 +47,7 @@ def draw_background():
     pygame.draw.line(screen, "black", (544, 40), (544, 558), 5)
 
     # draw inner background/side background boundary 
-    pygame.draw.line(screen, (100, 70, 40), (552, 40), (552, 560), 11)
+    pygame.draw.line(screen, (110, 80, 50), (552, 40), (552, 560), 11)
     pygame.draw.line(screen, "black", (560, 40), (560, 558), 5)
 
 # initialize rect, color, & text for "spin" button
@@ -74,7 +74,7 @@ def draw_buttons():
     pygame.draw.rect(screen, "black", x_button, 5, 50)
     screen.blit(x_text, (757, 19))
 
-scoreboard = pygame.Rect(574, 55, 170, 410)
+scoreboard = pygame.Rect(574, 55, 170, 411)
 scoreboard_color = (214, 207, 180)
 
 def draw_scoreboard():
@@ -239,7 +239,7 @@ def render_log(component_shapes):
             component_total += points
 
             # Render the log for the shape
-            text_surface = log_font.render(f"{component_number}. {color_name} +{points}", True, (0, 0, 0))
+            text_surface = log_font.render(f"{component_number + 1}. {color_name} +{points}", True, (0, 0, 0))
             screen.blit(text_surface, (x_offset, y_offset))
             y_offset += 14  # Move down for the next log string
 
@@ -255,7 +255,7 @@ def render_log(component_shapes):
             
         # Render the total points for the component
         total_surface = log_font.render(
-            f"Line {component_number}: {component_total} x {shape_count} = {final_total}",
+            f"Line {component_number + 1}: {component_total} x {shape_count} = {final_total}",
             True,
             (0, 0, 0),
         )
