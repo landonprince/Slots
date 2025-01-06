@@ -5,9 +5,9 @@ import random
 bronze = (185, 117, 60)
 silver = (180, 180, 180)
 gold = (212, 168, 55)
-diamond = (80, 160, 85)
+emerald = (80, 160, 85)
 
-colors = (bronze, silver, gold, diamond)
+colors = (bronze, silver, gold, emerald)
 weights = [50, 30, 15, 5]
 shapes = ("square", "triangle", "circle", "diamond")
 
