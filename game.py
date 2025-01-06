@@ -36,8 +36,7 @@ def draw_background():
     Fills the screen, draws the inner, outer, and side backgrounds, 
     draws the vertical grid lines, and draws the scoreboard background.
     """
-    screen.fill((125, 160, 185)) 
-    
+    screen.fill((100, 140, 80))
     # Outer background
     pygame.draw.rect(screen, (110, 80, 50), outer_bg, 20, 15)
     pygame.draw.rect(screen, "black", outer_bg, 5, 15)
@@ -289,13 +288,13 @@ def generate_log(component_shapes):
     Returns:
         dict: A dictionary of log data containing:
             - "log_entries": A list of strings for each log entry.
-            - "totals": A list of total points for each component.
-            - "grand_total": The final score for all components.
+            - "component_scores": List of total points for each component.
+            - "final_score": The final score for all components.
     """
     log_data = {
         "log_entries": [],
-        "totals": [],
-        "grand_total": 0
+        "component_scores": [],
+        "final_score": 0
     }
 
     for component_number, shapes in component_shapes.items():
@@ -308,117 +307,110 @@ def generate_log(component_shapes):
             color_name = color_names.get(shape.color, "unknown")
             component_total += points
 
-            # Add individual shape log entry
             log_data["log_entries"].append(
                 f"{component_number + 1}. {color_name} +{points}")
 
-        # Calculate the total for the component
-        final_total = component_total * shape_count
-        log_data["totals"].append(final_total)
+        component_score = component_total * shape_count
+        log_data["component_scores"].append(component_score)
 
-        # Add total log entry for the component
+        # Add total points for the component
         log_data["log_entries"].append(
             f"Line {component_number + 1}: {component_total} x " \
-                f"{shape_count} = {final_total}"
+                f"{shape_count} = {component_score}"
         )
 
-    # Calculate the grand total
-    log_data["grand_total"] = sum(log_data["totals"])
+    # Add final score of all components
+    log_data["final_score"] = sum(log_data["component_scores"])
     return log_data
 
 
 def draw_log(log_data):
     """
-    Draw the generated log data onto the screen.
+    Draw the generated log data.
     
     Parameters:
-        log_data (dict): A dictionary containing log data for rendering. Keys:
-            - 'log_entries': A list of strings for each log entry.
-            - 'totals': A list of final totals for each component.
-            - 'grand_total': The total score for all components combined.
+        log_data (dict): A dictionary of log data containing:
+            - "log_entries": A list of strings for each log entry.
+            - "totals": A list of total points for each component.
+            - "grand_total": The final score for all components.
     """
-    x_offset, y_offset = 587, 67  # Initial position for the log
+    x_offset, y_offset = 587, 67 
 
-    # Render each log entry
+    # Draw each log entry
     for entry in log_data["log_entries"]:
         if "Line" in entry:
             y_offset += 3
-            pygame.draw.line(screen, "black", (x_offset, y_offset), (729, y_offset), 2)
-            y_offset += 5  # Add spacing below the line
+            pygame.draw.line(screen, "black", (x_offset, y_offset),
+                            (729, y_offset), 2)
+            y_offset += 5 
             
-        # Render the log entry
         text_surface = log_font.render(entry, True, (0, 0, 0))
         screen.blit(text_surface, (x_offset, y_offset))
-        y_offset += 14  # Move down for the next log entry
+        y_offset += 14  
 
-        # Add a divider line after component totals
         if "Line" in entry:
             y_offset += 3
-            pygame.draw.line(screen, "black", (x_offset, y_offset), (729, y_offset), 2)
-            y_offset += 5  # Add spacing below the line
+            pygame.draw.line(screen, "black", (x_offset, y_offset), 
+                            (729, y_offset), 2)
+            y_offset += 5  
 
-    # Render the grand total
-    final_total_surface = score_font.render(
-        f"Score: {log_data['grand_total']}",
+    # draw the final score
+    final_score_surf = score_font.render(
+        f"Score: {log_data['final_score']}",
         True,
         (0, 0, 0),
     )
-    screen.blit(final_total_surface, (x_offset, y_offset))
+    screen.blit(final_score_surf, (x_offset, y_offset))
 
 
+# GAME LOOP -------------------------------------------------------------------
 
-# initialize all lines and the shapes in each component
-all_shapes = generate_shapes() # initialize all random shapes
+
+# Initialize the current game state
+all_shapes = generate_shapes() 
 all_lines = generate_lines(all_shapes)
 component_shapes = graph.get_component_shapes(all_lines)
 log_data = generate_log(component_shapes)
 
-    
-
-
-
-    
 
 while True:
-    # generate game structure and state
+    # Draw the current game state
     draw_background() 
     draw_buttons()
     draw_shapes(all_shapes)
     draw_lines(all_lines)
     draw_log(log_data)
     
-    mouse_pos = pygame.mouse.get_pos() # get mouse position every frame
+    mouse_pos = pygame.mouse.get_pos() 
     
-    # if the mouse position collides with the "spin" button, change its color
+    # Recolor buttons on mouse hover
     if reroll_button.collidepoint(mouse_pos):
         reroll_button_color = (125, 161, 125)
     else:
         reroll_button_color = (155, 191, 155)
-    # if the mouse position collides with the "x" button, change its color
     if x_button.collidepoint(mouse_pos):
         x_button_color = (125, 161, 125)
     else:
         x_button_color = (155, 191, 155)
     
-    # iterate through user input every frame
     for event in pygame.event.get():
-        # if the user closes the game window, quit the game
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+            
         if event.type == pygame.MOUSEBUTTONDOWN:
-            # if the user clicks the "spin" button, regenerate random shapes
+            # Update game state when "Reroll" button is clicked
             if event.button == 1 and reroll_button.collidepoint(mouse_pos):
                 all_shapes = generate_shapes()
                 all_lines = generate_lines(all_shapes)
                 component_shapes = graph.get_component_shapes(all_lines)
                 log_data = generate_log(component_shapes)
-            # if the user clicks the "x" button, quit the game
+                
+            # Quit game when "X" button is clicked
             if event.button == 1 and x_button.collidepoint(mouse_pos):
                 pygame.quit()
                 exit()
     
-    # update the display every frame
     pygame.display.update()
     clock.tick(60)
 
